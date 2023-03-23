@@ -53,6 +53,12 @@ Edit this `config.js` file:
 - Enable the "Music" room if wanted.
 
 
+### Lint the demo app
+
+```
+npm run lint
+```
+
 ### Build the demo app
 
 For production:
