@@ -7,6 +7,8 @@
 //  or in part, without the prior written consent of High Fidelity, Inc.
 //
 
+/* globals Sortable, playerlist, process, threshold */
+
 'use strict';
 
 import { HiFiAudio } from "hifi-web-audio"
@@ -184,7 +186,7 @@ const roomOptions = {
 
 
 let roomIDs = [];
-for (const [key, value] of Object.entries(roomOptions)) {
+for (const [key /*, value */] of Object.entries(roomOptions)) {
     roomIDs.push(key);
 }
 let currentRoomID = roomIDs[0];
@@ -288,7 +290,7 @@ webSocket.onmessage = async function (event) {
     }
 }
 
-webSocket.onopen = async function (event) {
+webSocket.onopen = async function (/* e */) {
     if (Config.CHANNEL_PREFIX) {
         options.channel = Config.CHANNEL_PREFIX;
     } else {
@@ -313,7 +315,7 @@ $(()=>{
 }
 )
 
-$("#username").change(async function (e) {
+$("#username").change(async function (/* e */) {
     actionQueue.push(async () => {
         options.username = $("#username").val();
         $("#local-player-name").text(options.username);
@@ -333,7 +335,7 @@ $("#join-form").submit(async function(e) {
     runQueue();
 })
 
-$("#leave").click(async function(e) {
+$("#leave").click(async function(/* e */) {
     actionQueue.push(async () => {
         $("#leave").attr("disabled", true);
         $("#join").attr("disabled", true);
@@ -343,7 +345,7 @@ $("#leave").click(async function(e) {
 })
 
 
-$("#aec").click(async function(e) {
+$("#aec").click(async function(/* e */) {
     // toggle the AEC state
     actionQueue.push(async () => {
         if (localSourcesEnabled) {
@@ -363,7 +365,7 @@ $("#aec").click(async function(e) {
 })
 
 
-$("#local").click(async function(e) {
+$("#local").click(async function(/* e */) {
     actionQueue.push(async () => {
         if (localSourcesEnabled) {
             await stopLocalSources();
@@ -378,7 +380,7 @@ $("#local").click(async function(e) {
 })
 
 
-$("#mute").click(async function(e) {
+$("#mute").click(async function(/* e */) {
     actionQueue.push(async () => {
         // toggle the state
         hiFiAudio.setMutedEnabled(!hiFiAudio.isMutedEnabled());
@@ -399,7 +401,7 @@ $("#mute").click(async function(e) {
 
 
 for (const rID of roomIDs) {
-    $("#" + rID).click(async function(e) {
+    $("#" + rID).click(async function(/* e */) {
         actionQueue.push(async () => {
             if (joined) {
                 await leaveRoom(true);
@@ -604,11 +606,11 @@ function onError(errMessage) {
 
 
 async function getRoomNamePrefix() {
-    var resolve, reject;
+    var resolve /*, reject */;
 
-    const crPromise = new Promise((setResolve, setReject) => {
+    const crPromise = new Promise((setResolve /*, setReject */) => {
         resolve = setResolve;
-        reject = setReject;
+        // reject = setReject;
     });
 
     var previousOnMessage = webSocket.onmessage;
@@ -632,11 +634,11 @@ async function getRoomNamePrefix() {
 
 
 async function getCurrentRoom() {
-    var resolve, reject;
+    var resolve /*, reject */;
 
-    const crPromise = new Promise((setResolve, setReject) => {
+    const crPromise = new Promise((setResolve /*, setReject */) => {
         resolve = setResolve;
-        reject = setReject;
+        // reject = setReject;
     });
 
     var previousOnMessage = webSocket.onmessage;
@@ -661,11 +663,11 @@ async function getCurrentRoom() {
 // https://docs.agora.io/en/Interactive%20Broadcast/token_server
 async function fetchToken(uid /*: string */, channelName /*: string */, tokenRole /*: number */) {
 
-    var resolve, reject;
+    var resolve /*, reject */;
 
-    const tokenPromise = new Promise((setResolve, setReject) => {
+    const tokenPromise = new Promise((setResolve /*, setReject */) => {
         resolve = setResolve;
-        reject = setReject;
+        // reject = setReject;
     });
 
     var previousOnMessage = webSocket.onmessage;
@@ -729,16 +731,17 @@ async function joinRoom() {
 
 
     let transport /* : TransportManager */;
+    let roomURL;
 
     switch (Config.TRANSPORT) {
         case "agora":
             transport = new TransportManagerAgora(fetchToken);
-            $("#rc").click(function(e) {
+            $("#rc").click(function(/* e */) {
                 transport.testReconnect();
             });
             break;
         case "daily":
-            let roomURL = Config.DAILY_URL + currentRoomID;
+            roomURL = Config.DAILY_URL + currentRoomID;
             console.log("joining daily.co room: " + roomURL);
             transport = new TransportManagerDaily(roomURL);
             break;
@@ -944,7 +947,7 @@ async function startLocalSounds(soundSpecs) {
     let finishedCount = 0;
     let stopped = false;
 
-    let checkForRestart = async (uid, event) => {
+    let checkForRestart = async (uid /*, event */) => {
         finishedCount++;
         if (!localAudioSources[ uid ]) {
             // if something else removed one of these sources, stop looping
@@ -976,7 +979,7 @@ async function startLocalSounds(soundSpecs) {
     // load and decode the audio files in parallel
     let loaders = [];
     for (let i = 0; i < soundSpecs.length; i++) {
-        loaders.push(new Promise((resolve, reject) => {
+        loaders.push(new Promise((resolve /*, reject */) => {
             fetch(soundSpecs[ i ].url).then((response) => {
                 response.arrayBuffer().then((buffer) => {
                     // convert audio file data to AudioBuffers.  buffer becomes detached and can't be used again...
@@ -989,7 +992,7 @@ async function startLocalSounds(soundSpecs) {
 
     // set up source nodes and add GUI elements
     for (let i = 0; i < soundSpecs.length; i++) {
-        let url = soundSpecs[ i ].url;
+        // let url = soundSpecs[ i ].url;
         let name = soundSpecs[ i ].name;
         let source = hiFiAudio.addLocalAudioSource();
         hiFiAudio.setSourcePosition(source.uid, soundSpecs[ i ].x, soundSpecs[ i ].y);
@@ -1020,7 +1023,7 @@ async function startLocalSources() {
     let ropts = roomOptions[ currentRoomID ];
     let starters = [];
     for (let audioSourceGroup of ropts.localAudioSources) {
-        starters.push(new Promise((resolve, reject) => { startLocalSounds(audioSourceGroup).then(resolve); }));
+        starters.push(new Promise((resolve /*, reject */) => { startLocalSounds(audioSourceGroup).then(resolve); }));
     }
     await Promise.all(starters);
 }

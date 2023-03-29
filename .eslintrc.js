@@ -3,5 +3,9 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint'],
     root: true,
-    ignorePatterns: ['.eslintrc.js', 'webpack.config.js', '/dist/**/*.*', '/vendor/*.*']
+    ignorePatterns: ['.eslintrc.js', 'webpack.config.js', '/dist/**/*.*', '/vendor/*.*'],
+    env: {
+        browser: true,
+        jquery: true
+    }
 };
