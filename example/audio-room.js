@@ -246,8 +246,8 @@ function fastLog2(x) {
 //
 // Sortable layout of video elements
 //
-let sortable;
-let resizeObserver;
+let sortable = null;
+let resizeObserver = null;
 
 
 function readyVideoSortable() {
@@ -262,6 +262,16 @@ function readyVideoSortable() {
     });
     resizeObserver = new ResizeObserver(updateVideoPositions);
     resizeObserver.observe(playerlist); // update positions on resize
+}
+
+function clearVideoSortable() {
+    if (!sortable) {
+        return;
+    }
+
+    sortable = null;
+    resizeObserver.disconnect();
+    resizeObserver = null;
 }
 
 
@@ -701,7 +711,9 @@ async function joinRoom() {
         sendUsername();
         return;
     }
+
     joined = true;
+    clearVideoSortable();
     updateRoomsUI();
 
     options.token = $("#token").val();
@@ -776,9 +788,6 @@ async function joinRoom() {
         // Play the local video track
         hiFiAudio.playVideo(listenerUid, "local-player");
     } else {
-        sortable = null;
-        resizeObserver = null;
-
         //
         // canvas GUI
         //
