@@ -27,7 +27,7 @@ export function CanvasControl(canvas, elements, usernames, callbackFunc, backgro
 
   this._lastMoveEventTime = 0;
   this._minimumThreshold = 16;
-  let that = this;  // eslint-disable-line @typescript-eslint/no-this-alias
+  let that = this;
 
   if (background) {
       this._background = new Image();

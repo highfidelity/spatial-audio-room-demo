@@ -1,11 +1,17 @@
 module.exports = {
-    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
-    parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint'],
-    root: true,
     ignorePatterns: ['.eslintrc.js', 'webpack.config.js', '/dist/**/*.*', '/vendor/*.*'],
     env: {
         browser: true,
-        jquery: true
+        jquery: true,
+        es2021: true
+    },
+    extends: "eslint:recommended",
+    overrides: [
+    ],
+    parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module"
+    },
+    rules: {
     }
 };
