@@ -87,7 +87,7 @@ export function CanvasControl(canvas, elements, usernames, callbackFunc, backgro
     that._cursorUpFunc(event);
   });
 
-  window.addEventListener('resize', function(event) {
+  window.addEventListener('resize', function(/* event */) {
     that.resize();
     //that.draw();
   }, false);
@@ -115,13 +115,13 @@ function absorbEvent(event) {
 }
 
 
-function getAbsoluteHeight(eltID) {
-    let elm = document.getElementById(eltID);
-    let elmHeight = parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('height'));
-    let elmMargin = parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('margin-top')) +
-        parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('margin-bottom'));
-    return (elmHeight+elmMargin);
-}
+// function getAbsoluteHeight(eltID) {
+//     let elm = document.getElementById(eltID);
+//     let elmHeight = parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('height'));
+//     let elmMargin = parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('margin-top')) +
+//         parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('margin-bottom'));
+//     return (elmHeight+elmMargin);
+// }
 
 function getAbsoluteWidth(eltID) {
     let elm = document.getElementById(eltID);
@@ -147,8 +147,8 @@ CanvasControl.prototype.resize = function() {
 
     // console.log("dpr -- screenSize=" + JSON.stringify(screenSize));
 
-    let windowWidth = Math.floor(window.innerWidth * dpr);
-    let windowHeight = Math.floor(window.innerHeight * dpr);
+    // let windowWidth = Math.floor(window.innerWidth * dpr);
+    // let windowHeight = Math.floor(window.innerHeight * dpr);
 
     // console.log("dpr -- window-size=" + JSON.stringify([windowWidth, windowHeight]));
 
@@ -157,7 +157,7 @@ CanvasControl.prototype.resize = function() {
 
     // let canvasWidth = windowWidth - getAbsoluteWidth('controls-and-rooms') * dpr - 40 * dpr;
     let canvasWidth = getAbsoluteWidth('controls-and-rooms') * dpr /*- 40 * dpr*/;
-    let canvasHeight = windowHeight - getAbsoluteHeight('controls-and-rooms') * dpr - 40 * dpr;
+    // let canvasHeight = windowHeight - getAbsoluteHeight('controls-and-rooms') * dpr - 40 * dpr;
 
     // console.log("dpr -- canvas-size=" + JSON.stringify([canvasWidth, canvasHeight]));
 
@@ -182,10 +182,10 @@ CanvasControl.prototype.resize = function() {
 CanvasControl.prototype.draw = function() {
   this._context.globalAlpha = 1;
   this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-  this._context.strokeRect(0, 0, canvas.width, canvas.height);
+  this._context.strokeRect(0, 0, this._canvas.width, this._canvas.height);
 
   if (this._background) {
-      this._context.drawImage(this._background, 0, 0, canvas.width, canvas.height);
+      this._context.drawImage(this._background, 0, 0, this._canvas.width, this._canvas.height);
   }
 
   for (let i = 0; i < this._elements.length; i++) {
@@ -211,7 +211,7 @@ CanvasControl.prototype.draw = function() {
       }
     }
   }
-  requestAnimationFrame((t) => this.draw());
+  requestAnimationFrame((/* t */) => this.draw());
 };
 
 CanvasControl.prototype.getCursorPosition = function(event) {
@@ -289,7 +289,7 @@ CanvasControl.prototype._cursorDownFunc = function(event) {
   }
 };
 
-CanvasControl.prototype._cursorUpFunc = function(event) {
+CanvasControl.prototype._cursorUpFunc = function(/* event */) {
   this._cursorDown = false;
   this._selected.index = -1;
 };
