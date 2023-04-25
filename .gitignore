@@ -1,3 +1,5 @@
+/.vs
+/.vscode
 /dist
 /example/config.js
 /node_modules
