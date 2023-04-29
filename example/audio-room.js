@@ -707,6 +707,11 @@ async function fetchToken(uid /*: string */, channelName /*: string */, tokenRol
 
 
 async function joinRoom() {
+    if (roomOptions[currentRoomID].metaData && !HiFiAudio.isMetadataSupported()) {
+        displayCannotJoinRoomUI();
+        return;
+    }
+
     if (joined) {
         updateAudioControlsUI();
         updateRoomsUI();
@@ -870,6 +875,30 @@ function updateAudioControlsUI() {
 }
 
 
+function displayCannotJoinRoomUI() {
+    for (const rID of roomIDs) {
+        let roomButton = document.getElementById(rID);
+        let roomButtonCircle = document.getElementById(rID + "-circle");
+        if (rID === currentRoomID) {
+            roomButton.style.background = "#007bff";
+            roomButtonCircle.style.fill = "#7fbfff";
+        } else {
+            roomButton.style.background = "#D9E8EF";
+            roomButtonCircle.style.fill = "";
+        }
+    }
+
+    const canvasContainer = document.getElementById("canvas-container");
+    const videoroomContainer = document.getElementById("playerlist");
+    const noMetadataContainer = document.getElementById("no-metadata");
+    canvasContainer.style.display = "none";
+    videoroomContainer.style.display = "none";
+    noMetadataContainer.style.display = "block";
+
+    $("#leave").attr("disabled", true);
+    $("#join").attr("disabled", false);
+}
+
 function updateRoomsUI() {
     for (const rID of roomIDs) {
         let roomButton = document.getElementById(rID);
@@ -888,6 +917,7 @@ function updateRoomsUI() {
 
         let canvasContainer = document.getElementById("canvas-container");
         let videoroomContainer = document.getElementById("playerlist");
+        let noMetadataContainer = document.getElementById("no-metadata");
         if (ropts.video) {
             canvasContainer.style.display = "none";
             videoroomContainer.style.display = "block";
@@ -895,6 +925,7 @@ function updateRoomsUI() {
             canvasContainer.style.display = "block";
             videoroomContainer.style.display = "none";
         }
+        noMetadataContainer.style.display = "none";
 
         let localSoundSwitchLabel = document.getElementById("local-source-switch-label");
         let localSoundSwitchP = document.getElementById("local-source-switch-p");
