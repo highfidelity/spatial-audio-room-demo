@@ -318,6 +318,24 @@ input[type=range] {
     transition: box-shadow 0.2s ease-in-out;
 }
 
+.no-metadata {
+    height: min-content;
+    min-height: 500px;
+    position: relative;
+    background: #DAD9D9;
+}
+
+.no-metadata p {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    text-align: center;
+    line-height: 1.5;
+    color: #000;
+}
+
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     input[type=range] {
         overflow: hidden;
