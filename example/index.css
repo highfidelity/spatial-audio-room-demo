@@ -252,6 +252,10 @@ input:checked+.slider {
     background-color: var(--accent);
 }
 
+input+.slider-option {
+    background-color: var(--accent);
+}
+
 input:focus+.slider {
     box-shadow: 0 0 1px var(--accent);
 }
@@ -316,6 +320,12 @@ input[type=range] {
     width: 100%;
     max-width: 100%;
     transition: box-shadow 0.2s ease-in-out;
+}
+
+input[type=range]:disabled {
+    opacity: 1;
+    --accent: #dddddd;
+    --accent_two: #aaaaaa;
 }
 
 .no-metadata {
