@@ -375,6 +375,23 @@ $("#aec").click(async function(/* e */) {
 })
 
 
+$("#gate").click(async function(/* e */) {
+    // Toggle automatic noise suppression between NS and gate.
+    actionQueue.push(async () => {
+        let ns = hiFiAudio.getNoiseSuppression();
+        if (ns === 'suppress') {
+            hiFiAudio.setNoiseSuppression('gate');
+        } else {
+            hiFiAudio.setNoiseSuppression('suppress');
+        }
+        updateAudioControlsUI();
+    });
+    runQueue();
+});
+
+hiFiAudio.setNoiseSuppression('suppress');
+
+
 $("#local").click(async function(/* e */) {
     actionQueue.push(async () => {
         if (localSourcesEnabled) {
@@ -395,8 +412,6 @@ $("#mute").click(async function(/* e */) {
         // toggle the state
         hiFiAudio.setMutedEnabled(!hiFiAudio.isMutedEnabled());
         updateAudioControlsUI();
-        // if muted, set gate threshold to 0dB, else follow slider
-        hiFiAudio.setThreshold(hiFiAudio.isMutedEnabled() ? 0.0 : threshold.value);
     });
     runQueue();
 })
@@ -428,7 +443,7 @@ for (const rID of roomIDs) {
 // threshold slider
 threshold.oninput = () => {
     hiFiAudio.setThreshold(threshold.value);
-    document.getElementById("threshold-value").value = threshold.value;
+    document.getElementById("threshold-value").value = threshold.value + " dB";
 }
 
 function clampCharacterPosition() {
@@ -872,7 +887,13 @@ function updateAudioControlsUI() {
 
     $("#mute").css("background-color", hiFiAudio.isMutedEnabled() ? "purple" : "");
     $("#mute").prop('checked', hiFiAudio.isMutedEnabled());
+
+    const ns = hiFiAudio.getNoiseSuppression();
+    $("#gate").prop("checked", ns === "gate");
+    $("#threshold").prop("disabled", ns !== "gate");
 }
+
+updateAudioControlsUI();
 
 
 function displayCannotJoinRoomUI() {
